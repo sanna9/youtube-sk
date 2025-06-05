@@ -27,3 +27,16 @@ If you are developing a production application, we recommend using TypeScript an
   -        ButtonList
   -        VideoContainer
   -            VideoCard
+
+
+
+  ===================
+  searchbar logic used for optimization:
+  applied debouncing using 200ms, clear the timeout
+  when remove/erase/backspace the searchbar keyword, no API call is made
+  when typing the past keyward (eg. in past i types india n again typing india) no api call will make, as it was cached in redux.
+
+
+  store the search history on search bar when click enter before typing, as soon as typing starts it shows suggestions
+  when click on the remove button which is in front of the history it will remove it.
+  

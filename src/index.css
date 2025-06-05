@@ -2,11 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Ensure ButtonList scrolls horizontally without affecting other elements */
 .custom-scroll-none {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping of buttons */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
-.custom-scroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
+/* Hide scrollbar for WebKit browsers */
+.custom-scroll-none::-webkit-scrollbar {
+  display: none;
+}
+.width-3{
+  width: 32%;
+}
+.width-4{
+  width: 24%;
 }

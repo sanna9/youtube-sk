@@ -3,6 +3,7 @@ import Trending from "../pages/Trending";
 import Subscriptions from "../pages/Subscriptions";
 import Library from "../pages/Library";
 import DefaultLayout from "../Layout/DefaultLayout";
+import Watch from "../pages/Watch";
 
 const routes = [
   {
@@ -12,6 +13,10 @@ const routes = [
       {
         index: true, // will render this when the parent path is matched exactly
         element: <Home />,
+      },
+      {
+        path: "watch",
+        element: <Watch />,
       },
       {
         path: "trending",

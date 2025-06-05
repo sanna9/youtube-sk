@@ -3,26 +3,48 @@ import { YOUTUBE_API } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
 
-const VideoContainer = () => {
+const VideoContainer = ({ propVideos }) => {
   const [videos, setVideos] = useState([]);
 
+  // If no videos passed as props, fetch trending videos as fallback
   useEffect(() => {
-    getVideo();
-  }, []);
+    if (!propVideos) {
+      getVideo();
+    }
+  }, [propVideos]);
 
   const getVideo = async () => {
-    const data = await fetch(YOUTUBE_API);
-    const response = await data?.json();
-    setVideos(response?.items);
+    try {
+      const data = await fetch(YOUTUBE_API);
+      const response = await data.json();
+      setVideos(response.items);
+    } catch (error) {
+      console.error("Failed to fetch trending videos:", error);
+    }
   };
+
+  const renderVideos = propVideos || videos;
+  console.log("renderVideos", renderVideos);
+
   return (
     <div className="flex flex-wrap">
-      {videos.length > 0 &&
-        videos.map((video) => (
-          <Link className="width-3" to={"/watch?v=" + video.id}>
-            <VideoCard key={video.id} videoData={video} />{" "}
+      {renderVideos.map((video, i) => {
+        // Get videoId - YouTube API search uses video.id.videoId
+        const videoId = video.id?.videoId || video.id;
+
+        // snippet should always exist in YouTube API results
+        const snippet = video.snippet;
+
+        return (
+          <Link
+            key={videoId || i}
+            to={"/watch?v=" + videoId}
+            className="width-3"
+          >
+            <VideoCard videoData={{ snippet }} />
           </Link>
-        ))}
+        );
+      })}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import logo from "../assets/youtube.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../store/slices/searchSlice";
 
@@ -11,6 +11,14 @@ function Header() {
   const [suggestions, setSuggestions] = useState([]);
   const searchCache = useSelector((store) => store.search);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/results?search_query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -37,18 +45,20 @@ function Header() {
     if (!searchQuery.trim()) return;
 
     try {
-      const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+      const data = await fetch(
+        YOUTUBE_SEARCH_API + encodeURIComponent(searchQuery)
+      );
       const json = await data.json();
+
       if (Array.isArray(json[1])) {
         setSuggestions(json[1]);
-        //update the cache
         dispatch(cacheResults({ [searchQuery]: json[1] }));
       } else {
         setSuggestions([]);
       }
     } catch (error) {
-      setSuggestions([]);
       console.error("Error fetching search suggestions:", error);
+      setSuggestions([]);
     }
   };
 
@@ -66,13 +76,13 @@ function Header() {
         </Link>
       </div>
 
-      <form className="flex items-center w-2/5">
+      <form className="flex items-center w-2/5" onSubmit={handleSearchSubmit}>
         <input
           type="text"
           placeholder="Search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border-gray-300 border text-black p-2 rounded-l-3xl w-4/5"
+          className="border-gray-300 border text-black p-2 rounded-l-3xl w-4/5 focus:outline-none"
         />
         <button
           type="submit"
@@ -81,7 +91,7 @@ function Header() {
           Search
         </button>
         {suggestions.length > 0 && (
-          <div className="fixed bg-white w-96 shadow-lg p-2 rounded-lg top-16 z-50">
+          <div className="fixed bg-white w-96 shadow-lg p-2 rounded-lg top-16 z-50 border border-gray-300">
             {suggestions.map((s) => (
               <div key={s} className="py-2 hover:bg-gray-100 cursor-pointer">
                 &#128269; {s}

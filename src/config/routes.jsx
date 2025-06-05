@@ -4,6 +4,7 @@ import Subscriptions from "../pages/Subscriptions";
 import Library from "../pages/Library";
 import DefaultLayout from "../Layout/DefaultLayout";
 import Watch from "../pages/Watch";
+import SearchResult from "../pages/SearchResult";
 
 const routes = [
   {
@@ -29,6 +30,10 @@ const routes = [
       {
         path: "library",
         element: <Library />,
+      },
+      {
+        path: "/results",
+        element: <SearchResult />,
       },
     ],
   },

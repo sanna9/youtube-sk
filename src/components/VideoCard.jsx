@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const VideoCard = ({ videoData }) => {
   const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-  const { snippet, statistics } = videoData;
+  const { snippet } = videoData;
   const { title, channelTitle, publishedAt, thumbnails } = snippet;
 
   const currentDate = new Date();
@@ -33,7 +33,7 @@ const VideoCard = ({ videoData }) => {
       } hover:shadow-lg rounded-lg hover:bg-slate-100`}
     >
       <img
-        src={thumbnails.default.url}
+        src={thumbnails?.maxres?.url || thumbnails?.high?.url}
         alt={title}
         className="rounded-lg w-full h-48 object-cover"
       />

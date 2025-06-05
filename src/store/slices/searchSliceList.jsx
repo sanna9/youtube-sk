@@ -1,48 +1,39 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { YOUTUBE_SEARCH_API_LIST } from "../../utils/constants"; // adjust path if needed
 
-// Async action
 export const fetchYouTubeResults = createAsyncThunk(
   "search/fetchYouTubeResults",
   async (searchTerm) => {
-    const response = await fetch(
-      "https://www.youtube.com/youtubei/v1/search?key=YOUR_KEY",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Visitor-Id": "YOUR_VISITOR_ID",
-          "X-Youtube-Client-Name": "1",
-          "X-Youtube-Client-Version": "2.20240601.00.00",
-        },
-        body: JSON.stringify({
-          context: {
-            client: {
-              clientName: "WEB",
-              clientVersion: "2.20240601.00.00",
-            },
-          },
-          query: searchTerm,
-        }),
-      }
-    );
+    const url = `${YOUTUBE_SEARCH_API_LIST}&q=${encodeURIComponent(
+      searchTerm
+    )}`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch YouTube data");
+    }
 
     const data = await response.json();
-    return data;
+    console.log("YouTube search results api");
+    // data.items is the array of video results
+    return data.items;
   }
 );
 
-// Slice
 const searchSliceList = createSlice({
-  name: "search",
+  name: "searchSliceList",
   initialState: {
     results: [],
     status: "idle",
     error: null,
   },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchYouTubeResults.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(fetchYouTubeResults.fulfilled, (state, action) => {
         state.status = "succeeded";

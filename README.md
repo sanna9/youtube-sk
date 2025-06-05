@@ -35,8 +35,10 @@ If you are developing a production application, we recommend using TypeScript an
   applied debouncing using 200ms, clear the timeout
   when remove/erase/backspace the searchbar keyword, no API call is made
   when typing the past keyward (eg. in past i types india n again typing india) no api call will make, as it was cached in redux.
-
+  when searcing anything on searchbar,it opens in new /result page with new search results,resuign components
 
   store the search history on search bar when click enter before typing, as soon as typing starts it shows suggestions
   when click on the remove button which is in front of the history it will remove it.
+  when i click on outisde of teh searchbar the drop suggestion shoul hide.only shows when i cluck inside the searchbar
+  when i sleect f orm teh suggestion dropdown iyt shoudl refill in teh searchbar and then on hit ythe search it shoudl display results
   

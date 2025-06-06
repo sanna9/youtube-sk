@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchYouTubeResults } from "../store/slices/searchSliceList";
-import VideoContainer from "../components/VideoContainer";
+
+import VideoContainer from "../../../components/VideoContainer";
+import { fetchYouTubeResults } from "../redux/searchThunks";
 
 const SearchResult = () => {
   const [searchParams] = useSearchParams();
@@ -10,11 +11,10 @@ const SearchResult = () => {
   const dispatch = useDispatch();
 
   const { results, status, error } = useSelector(
-    (state) => state.searchSliceList
+    (state) => state.searchResults
   );
 
   useEffect(() => {
-    console.log("searchresult mounted");
     if (searchQuery) {
       dispatch(fetchYouTubeResults(searchQuery));
     }

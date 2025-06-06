@@ -24,7 +24,6 @@ const VideoContainer = ({ propVideos }) => {
   };
 
   const renderVideos = propVideos || videos;
-  console.log("renderVideos", renderVideos);
 
   return (
     <div className="flex flex-wrap">

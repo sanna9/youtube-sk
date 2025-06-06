@@ -1,13 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import appSlice from "./slices/appSlice";
-import searchSlice from "./slices/searchSlice";
-import searchSliceList from "./slices/searchSliceList";
+import appReducer from "./slices/appSlice";
+import searchReducer from "../features/search/redux/searchSlice";
+import searchResultsReducer from "../features/search/redux/searchResultsSlice";
 
 const store = configureStore({
   reducer: {
-    app: appSlice,
-    search: searchSlice,
-    searchSliceList: searchSliceList,
+    app: appReducer,
+    search: searchReducer,
+    searchResults: searchResultsReducer,
   },
 });
+
 export default store;

@@ -3,13 +3,12 @@ import logo from "../assets/youtube.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { YOUTUBE_SEARCH_API } from "../utils/constants";
-import { cacheResults } from "../store/slices/searchSlice";
+import { fetchSearchSuggestions } from "../features/search/redux/searchThunks";
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const searchCache = useSelector((store) => store.search);
+  const searchCache = useSelector((store) => store.search.cache);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,41 +25,19 @@ function Header() {
 
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setSuggestions([]);
       return;
     }
+
     const timer = setTimeout(() => {
-      if (searchCache[searchQuery]) {
+      if (!searchCache[searchQuery]) {
+        dispatch(fetchSearchSuggestions(searchQuery));
+      } else {
         setSuggestions(searchCache[searchQuery]);
-      } else {
-        getSearchSuggestions();
       }
-    }, 200);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [searchQuery]);
+    }, 300);
 
-  const getSearchSuggestions = async () => {
-    if (!searchQuery.trim()) return;
-
-    try {
-      const data = await fetch(
-        YOUTUBE_SEARCH_API + encodeURIComponent(searchQuery)
-      );
-      const json = await data.json();
-
-      if (Array.isArray(json[1])) {
-        setSuggestions(json[1]);
-        dispatch(cacheResults({ [searchQuery]: json[1] }));
-      } else {
-        setSuggestions([]);
-      }
-    } catch (error) {
-      console.error("Error fetching search suggestions:", error);
-      setSuggestions([]);
-    }
-  };
+    return () => clearTimeout(timer);
+  }, [searchQuery, searchCache, dispatch]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md text-black p-2 flex items-center justify-between py-4">

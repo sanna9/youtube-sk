@@ -4,7 +4,8 @@ import Subscriptions from "../pages/Subscriptions";
 import Library from "../pages/Library";
 import DefaultLayout from "../Layout/DefaultLayout";
 import Watch from "../pages/Watch";
-import SearchResult from "../pages/SearchResult";
+import SearchResult from "../features/search/pages/SearchResult";
+
 
 const routes = [
   {

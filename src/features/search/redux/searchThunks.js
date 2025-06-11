@@ -22,7 +22,6 @@ export const fetchYouTubeResults = createAsyncThunk(
       const data = await response.json();
       return data.items; // array of video results
     } catch (error) {
-      // Return a rejected value for proper error handling
       return rejectWithValue(error.message);
     }
   }
@@ -44,8 +43,6 @@ export const fetchSearchSuggestions = createAsyncThunk(
       const data = await response.json();
       const suggestions = data[1] || [];
 
-      // Cache in Redux
-      dispatch(cacheResults({ [searchTerm]: suggestions }));
 
       return { searchTerm, suggestions };
     } catch (error) {

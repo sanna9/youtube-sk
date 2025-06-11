@@ -9,6 +9,7 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [searchHistory, setSearchHistory] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,6 +19,13 @@ function Header() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/results?search_query=${encodeURIComponent(searchQuery)}`);
+      let updateHistory = [...searchHistory];
+      if (!updateHistory.includes(searchQuery)) {
+        updateHistory.push(searchQuery);
+      }
+      localStorage.setItem("search_query", JSON.stringify(updateHistory));
+      setSearchHistory(searchQuery);
+
       setDropdownVisible(false);
     }
   };
@@ -34,7 +42,8 @@ function Header() {
   };
 
   const handleInputFocus = () => {
-    if (suggestions.length > 0) setDropdownVisible(true);
+    if (suggestions.length > 0 || searchHistory?.length > 0)
+      setDropdownVisible(true);
   };
 
   const handleInputBlur = () => {
@@ -42,6 +51,9 @@ function Header() {
   };
 
   useEffect(() => {
+    const storedHistory =
+      JSON.parse(localStorage.getItem("search_query")) || [];
+    setSearchHistory(storedHistory);
     if (!searchQuery.trim()) {
       setSuggestions([]);
       setDropdownVisible(false);
@@ -90,17 +102,32 @@ function Header() {
           Search
         </button>
 
-        {dropdownVisible && suggestions.length > 0 && (
+        {dropdownVisible && (
           <div className="fixed bg-white w-96 shadow-lg p-2 rounded-lg top-16 z-50 border border-gray-300">
-            {suggestions.map((s) => (
-              <div
-                key={s}
-                onClick={() => handleSuggestionClick(s)}
-                className="py-2 hover:bg-gray-100 cursor-pointer"
-              >
-                &#128269; {s}
+            {suggestions.length > 0 &&
+              suggestions.map((s) => (
+                <div
+                  key={s}
+                  onClick={() => handleSuggestionClick(s)}
+                  className="py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  &#128269; {s}
+                </div>
+              ))}
+            {!suggestions.length > 0 && searchHistory?.length > 0 && (
+              <div className="mt-2">
+                <h3 className="font-semibold">Search History</h3>
+                {searchHistory.map((item) => (
+                  <div
+                    key={item}
+                    onClick={() => handleSuggestionClick(item)}
+                    className="py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    &#128269; {item}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         )}
       </form>

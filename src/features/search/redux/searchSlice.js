@@ -4,15 +4,12 @@ import { fetchSearchSuggestions } from "./searchThunks";
 const searchSlice = createSlice({
   name: "search",
   initialState: {
-    cache: {}, // for search suggestions autocomplete
-    history: [], // search history
+    cache: {},
+    history: [],
     status: "idle",
     error: null,
   },
   reducers: {
-    cacheResults: (state, action) => {
-      Object.assign(state.cache, action.payload);
-    },
     addToHistory: (state, action) => {
       const query = action.payload;
       if (!state.history.includes(query)) {

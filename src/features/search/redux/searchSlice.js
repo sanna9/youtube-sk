@@ -5,19 +5,12 @@ const searchSlice = createSlice({
   name: "search",
   initialState: {
     cache: {},
-    history: [],
     status: "idle",
     error: null,
   },
   reducers: {
-    addToHistory: (state, action) => {
-      const query = action.payload;
-      if (!state.history.includes(query)) {
-        state.history.push(query);
-      }
-    },
-    removeFromHistory: (state, action) => {
-      state.history = state.history.filter((item) => item !== action.payload);
+    removeFromCache: (state, action) => {
+      delete state.cache[action.payload];
     },
   },
   extraReducers: (builder) => {
@@ -38,6 +31,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { cacheResults, addToHistory, removeFromHistory } =
-  searchSlice.actions;
+export const { removeFromCache } = searchSlice.actions;
 export default searchSlice.reducer;

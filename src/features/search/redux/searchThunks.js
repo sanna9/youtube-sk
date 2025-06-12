@@ -3,7 +3,7 @@ import {
   YOUTUBE_SEARCH_API,
   YOUTUBE_SEARCH_API_LIST,
 } from "../../../utils/constants";
-import { cacheResults } from "./searchSlice";
+
 
 // Fetch YouTube search results
 export const fetchYouTubeResults = createAsyncThunk(

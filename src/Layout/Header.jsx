@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchSearchSuggestions } from "../features/search/redux/searchThunks";
+import { removeFromCache } from "../features/search/redux/searchSlice";
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,21 +15,6 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const searchCache = useSelector((store) => store.search.cache);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/results?search_query=${encodeURIComponent(searchQuery)}`);
-      let updateHistory = [...searchHistory];
-      if (!updateHistory.includes(searchQuery)) {
-        updateHistory.push(searchQuery);
-      }
-      localStorage.setItem("search_query", JSON.stringify(updateHistory));
-      setSearchHistory(searchQuery);
-
-      setDropdownVisible(false);
-    }
-  };
 
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
@@ -48,6 +34,31 @@ function Header() {
 
   const handleInputBlur = () => {
     setTimeout(() => setDropdownVisible(false), 150);
+  };
+
+  const removeHistoryHandler = (itemToRemove) => {
+    const updatedHistory = searchHistory.filter(
+      (item) => item !== itemToRemove
+    );
+
+    setSearchHistory(updatedHistory);
+    localStorage.setItem("search_query", JSON.stringify(updatedHistory));
+    dispatch(removeFromCache(itemToRemove));
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/results?search_query=${encodeURIComponent(searchQuery)}`);
+      let updateHistory = [...searchHistory];
+      if (!updateHistory.includes(searchQuery)) {
+        updateHistory.push(searchQuery);
+      }
+      localStorage.setItem("search_query", JSON.stringify(updateHistory));
+      setSearchHistory(updateHistory);
+
+      setDropdownVisible(false);
+    }
   };
 
   useEffect(() => {
@@ -97,7 +108,7 @@ function Header() {
         />
         <button
           type="submit"
-          className="border-gray-300 border p-2 rounded-r-3xl w-1/5"
+          className="border-gray-300 border p-2 rounded-r-3xl w-1/5 cursor-pointer"
         >
           Search
         </button>
@@ -119,11 +130,22 @@ function Header() {
                 <h3 className="font-semibold">Search History</h3>
                 {searchHistory.map((item) => (
                   <div
+                    className="flex justify-between items-center hover:bg-gray-100 px-2 rounded"
                     key={item}
-                    onClick={() => handleSuggestionClick(item)}
-                    className="py-2 hover:bg-gray-100 cursor-pointer"
                   >
-                    &#128269; {item}
+                    <span
+                      key={item}
+                      onClick={() => handleSuggestionClick(item)}
+                      className="py-2  cursor-pointer"
+                    >
+                      &#128269; {item}
+                    </span>
+                    <span
+                      className="cursor-pointer hover:text-blue-500"
+                      onClick={() => removeHistoryHandler(item)}
+                    >
+                      Remove
+                    </span>
                   </div>
                 ))}
               </div>

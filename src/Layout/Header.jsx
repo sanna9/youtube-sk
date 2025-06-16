@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchSearchSuggestions } from "../features/search/redux/searchThunks";
-import { removeFromCache } from "../features/search/redux/searchSlice";
+import { removeFromCache } from "../features/search/redux/searchSuggestionsSlice";
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,7 +14,7 @@ function Header() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const searchCache = useSelector((store) => store.search.cache);
+  const searchCache = useSelector((store) => store.searchSuggestion.cache);
 
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);

@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchSearchSuggestions } from "./searchThunks";
 
-const searchSlice = createSlice({
-  name: "search",
+const searchSuggestionsSlice = createSlice({
+  name: "searchSuggestion",
   initialState: {
     cache: {},
     status: "idle",
@@ -31,5 +31,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { removeFromCache } = searchSlice.actions;
-export default searchSlice.reducer;
+export const { removeFromCache } = searchSuggestionsSlice.actions;
+export default searchSuggestionsSlice.reducer;

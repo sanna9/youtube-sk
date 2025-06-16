@@ -41,6 +41,20 @@ If you are developing a production application, we recommend using TypeScript an
   n dropdown iyt shoudl refill in teh searchbar and then on hit ythe search it shoudl display results
   store the search history on search bar when click enter before typing, as soon as typing starts it shows suggestions
   when click on the remove button which is in front of the history it will remove it.
+  recursion on the comment section(live chat)
 
   make suggestion dropdown component n use it then,make it optimised, add views beside the time upload
+  infinite scroll on home
+  debouncing on searchbar
+  write test cases
   add time stamp on the vidoes of search(not in api)
+
+  ## use live api for comments as per video ID
+
+  
+  ## Live Chat: 
+    challenges: get live data, how you update the UI on the page
+    uses: websockets
+ 
+  use typescript later
+  make the custom hook and it usecase

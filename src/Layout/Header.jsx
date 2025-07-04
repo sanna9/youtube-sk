@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import logo from "../assets/youtube.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchSearchSuggestions } from "../features/search/redux/searchThunks";
 import { removeFromCache } from "../features/search/redux/searchSuggestionsSlice";
+import { MAX_HISTORY_ITEMS } from "../utils/constants";
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,11 +22,11 @@ function Header() {
     setDropdownVisible(true);
   };
 
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = useCallback((suggestion) => {
     setSearchQuery(suggestion);
     navigate(`/results?search_query=${encodeURIComponent(suggestion)}`);
     setDropdownVisible(false);
-  };
+  });
 
   const handleInputFocus = () => {
     if (suggestions.length > 0 || searchHistory?.length > 0)
@@ -36,15 +37,18 @@ function Header() {
     setTimeout(() => setDropdownVisible(false), 150);
   };
 
-  const removeHistoryHandler = (itemToRemove) => {
-    const updatedHistory = searchHistory.filter(
-      (item) => item !== itemToRemove
-    );
+  const removeHistoryHandler = useCallback(
+    (itemToRemove) => {
+      const updatedHistory = searchHistory.filter(
+        (item) => item !== itemToRemove
+      );
 
-    setSearchHistory(updatedHistory);
-    localStorage.setItem("search_query", JSON.stringify(updatedHistory));
-    dispatch(removeFromCache(itemToRemove));
-  };
+      setSearchHistory(updatedHistory);
+      localStorage.setItem("search_query", JSON.stringify(updatedHistory));
+      dispatch(removeFromCache(itemToRemove));
+    },
+    [dispatch]
+  );
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -54,9 +58,12 @@ function Header() {
       if (!updateHistory.includes(searchQuery)) {
         updateHistory.push(searchQuery);
       }
-      localStorage.setItem("search_query", JSON.stringify(updateHistory));
-      setSearchHistory(updateHistory);
 
+      if (updateHistory.length > MAX_HISTORY_ITEMS) {
+        updateHistory.splice(0, 1);
+      }
+      setSearchHistory(updateHistory);
+      localStorage.setItem("search_query", JSON.stringify(updateHistory));
       setDropdownVisible(false);
     }
   };
@@ -65,6 +72,9 @@ function Header() {
     const storedHistory =
       JSON.parse(localStorage.getItem("search_query")) || [];
     setSearchHistory(storedHistory);
+  }, []);
+
+  useEffect(() => {
     if (!searchQuery.trim()) {
       setSuggestions([]);
       setDropdownVisible(false);
@@ -80,7 +90,7 @@ function Header() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, searchCache, dispatch]);
+  }, [searchQuery, searchCache]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md text-black p-2 flex items-center justify-between py-4">
@@ -136,7 +146,7 @@ function Header() {
                     <span
                       key={item}
                       onClick={() => handleSuggestionClick(item)}
-                      className="py-2  cursor-pointer"
+                      className="py-1 cursor-pointer"
                     >
                       &#128269; {item}
                     </span>

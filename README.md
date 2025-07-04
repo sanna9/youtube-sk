@@ -44,17 +44,28 @@ If you are developing a production application, we recommend using TypeScript an
   recursion on the comment section(live chat)
 
   make suggestion dropdown component n use it then,make it optimised, add views beside the time upload
-  infinite scroll on home
+  
   debouncing on searchbar
   write test cases
-  add time stamp on the vidoes of search(not in api)
+  Shimmer UI
+  add Accessibility checks(keyboard navigation and screen reader compatibility, ARIA roles |
+  axe, Lighthouse, and React a11y to audit your apps)
+  
 
-  ## use live api for comments as per video ID
+  # working on:
+  infinite scroll on home
 
   
-  ## Live Chat: 
+  ## Live Chat: (will do live chat for multiple users using firebase)
     challenges: get live data, how you update the UI on the page
     uses: websockets
  
   use typescript later
-  make the custom hook and it usecase
+  make the custom hook and its usecase
+
+  id user is not intreste din some videos or type of content he can hide it while typing keywords, then whenever he will search ut wont show those keywords havign videos
+
+
+  ## check later:
+  add time stamp on the vidoes of search(not in api)
+  use live api for comments as per video ID(api havign one level of comments for dev api)

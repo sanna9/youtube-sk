@@ -3,6 +3,7 @@ import appReducer from "./slices/appSlice";
 import searchSuggestionReducer from "../features/search/redux/searchSuggestionsSlice";
 import searchResultsReducer from "../features/search/redux/searchResultsSlice";
 import chatReducer from "../features/LiveChat/redux/chatSlice";
+import videoReducer from "./slices/videoSlice"; // Assuming you have a videoSlice defined
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     searchSuggestion: searchSuggestionReducer,
     searchResults: searchResultsReducer,
     chat: chatReducer,
+    videos: videoReducer, // Assuming you have a videoReducer defined
   },
 });
 

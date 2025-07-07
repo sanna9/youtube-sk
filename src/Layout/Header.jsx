@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/youtube.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../store/slices/appSlice";
@@ -6,12 +6,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { fetchSearchSuggestions } from "../features/search/redux/searchThunks";
 import { removeFromCache } from "../features/search/redux/searchSuggestionsSlice";
 import { MAX_HISTORY_ITEMS } from "../utils/constants";
+import { RESULTS_PATH } from "../utils/routePaths";
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,11 +24,11 @@ function Header() {
     setDropdownVisible(true);
   };
 
-  const handleSuggestionClick = useCallback((suggestion) => {
+  const handleSuggestionClick = (suggestion) => {
     setSearchQuery(suggestion);
-    navigate(`/results?search_query=${encodeURIComponent(suggestion)}`);
+    navigate(`${RESULTS_PATH}?search_query=${encodeURIComponent(suggestion)}`);
     setDropdownVisible(false);
-  });
+  };
 
   const handleInputFocus = () => {
     if (suggestions.length > 0 || searchHistory?.length > 0)
@@ -37,23 +39,20 @@ function Header() {
     setTimeout(() => setDropdownVisible(false), 150);
   };
 
-  const removeHistoryHandler = useCallback(
-    (itemToRemove) => {
-      const updatedHistory = searchHistory.filter(
-        (item) => item !== itemToRemove
-      );
-
-      setSearchHistory(updatedHistory);
-      localStorage.setItem("search_query", JSON.stringify(updatedHistory));
-      dispatch(removeFromCache(itemToRemove));
-    },
-    [dispatch]
-  );
+  const removeHistoryHandler = (itemToRemove) => {
+    const updatedHistory = searchHistory.filter(
+      (item) => item !== itemToRemove
+    );
+    setSearchHistory(updatedHistory);
+    dispatch(removeFromCache(itemToRemove));
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/results?search_query=${encodeURIComponent(searchQuery)}`);
+      navigate(
+        `${RESULTS_PATH}?search_query=${encodeURIComponent(searchQuery)}`
+      );
       let updateHistory = [...searchHistory];
       if (!updateHistory.includes(searchQuery)) {
         updateHistory.push(searchQuery);
@@ -63,7 +62,6 @@ function Header() {
         updateHistory.splice(0, 1);
       }
       setSearchHistory(updateHistory);
-      localStorage.setItem("search_query", JSON.stringify(updateHistory));
       setDropdownVisible(false);
     }
   };
@@ -73,6 +71,14 @@ function Header() {
       JSON.parse(localStorage.getItem("search_query")) || [];
     setSearchHistory(storedHistory);
   }, []);
+
+  useEffect(() => {
+    if (hasMounted) {
+      localStorage.setItem("search_query", JSON.stringify(searchHistory));
+    } else {
+      setHasMounted(true);
+    }
+  }, [searchHistory]);
 
   useEffect(() => {
     if (!searchQuery.trim()) {

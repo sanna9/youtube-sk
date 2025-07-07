@@ -37,7 +37,11 @@ const VideoCard = ({ videoData }) => {
         alt={title}
         className="rounded-lg w-full h-48 object-cover"
       />
-      <div className="text-sm text-gray-700 pt-2">
+      <div
+        className="text-sm text-gray-700 pt-2"
+        role="group"
+        aria-label={`Details about ${title}`}
+      >
         <p className="text-sm font-bold">{title}</p>
         <p>{channelTitle}</p>
         <p>{timeAgo}</p>

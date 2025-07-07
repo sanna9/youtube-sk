@@ -37,23 +37,31 @@ If you are developing a production application, we recommend using TypeScript an
   when typing the past keyward (eg. in past i types india n again typing india) no api call will make, as it was cached in redux.
   when searcing anything on searchbar,it opens in new /result page with new search results,resuign components
   when i click on outisde of teh searchbar the drop suggestion shoul hide.only shows when i cluck inside the searchbar
-  when i sleect f orm teh suggestio
-  n dropdown iyt shoudl refill in teh searchbar and then on hit ythe search it shoudl display results
+  when i select from the suggestion dropdown iyt shoudl refill in teh searchbar and then on hit ythe search it shoudl display results
   store the search history on search bar when click enter before typing, as soon as typing starts it shows suggestions
   when click on the remove button which is in front of the history it will remove it.
   recursion on the comment section(live chat)
+  infinite scroll on home
+  No API call will be made when navigating back to the video list page (like Home or Search Results page) from a single video watch page, as long as the video data already exists in the Redux state.The component’s useEffect is set up to fetch videos only if the Redux state is empty. So navigating back will simply reuse the cached video data from Redux without triggering a new API call.
+  debouncing on searchbar
+  Shimmer UI
+  to make constants file for paths
 
   make suggestion dropdown component n use it then,make it optimised, add views beside the time upload
   
-  debouncing on searchbar
+
   write test cases
-  Shimmer UI
+ 
   add Accessibility checks(keyboard navigation and screen reader compatibility, ARIA roles |
   axe, Lighthouse, and React a11y to audit your apps)
+  add project on firebase hositing
+  check g-matrix, lighthouse dev tool,
+  add g-tag inside code for google anayltics
+ 
   
 
-  # working on:
-  infinite scroll on home
+  
+  
 
   
   ## Live Chat: (will do live chat for multiple users using firebase)

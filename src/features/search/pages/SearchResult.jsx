@@ -14,11 +14,11 @@ const SearchResult = () => {
     (state) => state.searchResults
   );
 
-  useEffect(() => {
-    if (searchQuery) {
-      dispatch(fetchYouTubeResults(searchQuery));
-    }
-  }, [dispatch, searchQuery]);
+useEffect(() => {
+  if (searchQuery && results.length === 0) {
+    dispatch(fetchYouTubeResults(searchQuery));
+  }
+}, [dispatch, searchQuery]);
 
   return (
     <div className="mt-16">

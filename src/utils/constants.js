@@ -11,4 +11,4 @@ export const YOUTUBE_SEARCH_API_LIST =
 export const YOUTUBE_VIDEO_COMMENTS_API =
   "GET https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=VIDEO_ID_HERE&key=YOUR_API_KEY&maxResults=20";
 export const LIVE_CHAT_COUNT = 10;
-export const MAX_HISTORY_ITEMS = 3;
+export const MAX_HISTORY_ITEMS = 10;
